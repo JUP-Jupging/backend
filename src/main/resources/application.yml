@@ -1,0 +1,18 @@
+spring:
+  profiles:
+    active: dev
+  datasource:
+    driver-class-name: oracle.jdbc.OracleDriver
+
+server:
+  port: 8080
+
+mybatis:
+  mapper-locations: classpath:mapper/**/*.xml
+  type-aliases-package: com.jup.jupging.domain
+  configuration:
+    map-underscore-to-camel-case: true
+
+logging:
+  level:
+    root: info
