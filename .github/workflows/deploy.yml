@@ -52,7 +52,8 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker stop jupging-server || true
-            docker rm jupging-server || true
+            docker --config "$HOME/.docker"
+            docker stop boot || true
+            docker rm boot || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
             docker run -d --name boot -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
