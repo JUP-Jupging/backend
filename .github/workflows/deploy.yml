@@ -52,6 +52,8 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
+            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+
             docker stop boot || true
             docker rm boot || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
