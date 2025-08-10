@@ -57,4 +57,4 @@ jobs:
             docker stop boot || true
             docker rm boot || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
-            docker run -d --name boot -p 8080:8080 ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
+            docker run -d --name boot -p 8080:8080 --network jupging-network ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
