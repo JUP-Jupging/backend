@@ -52,7 +52,7 @@ jobs:
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
           script: |
-            docker --config "$HOME/.docker"
+            export DOCKER_CONFIG="$HOME/.docker"
             docker stop boot || true
             docker rm boot || true
             docker pull ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
