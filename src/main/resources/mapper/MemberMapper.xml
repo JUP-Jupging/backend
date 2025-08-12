@@ -5,8 +5,101 @@
 
 <mapper namespace="com.jup.jupging.domain.member.mapper.MemberMapper">
 
-    <select id="findAll" resultType="com.jup.jupging.domain.member.dto.MemberDto">
-        SELECT userid, name, password, address, email FROM member
-    </select>
+  <!-- 공통 컬럼 -->
+  <sql id="BaseColumns">
+    ID                AS memberId,
+    EMAIL,
+    NICKNAME,
+    APP_NICKNAME      AS appNickname,
+    PROVIDER,
+    IS_DELETED        AS isDeleted,
+    PROFILE_IMAGE_KEY AS profileImageUrl,   <!-- DTO가 url 필드명이라 alias로 맞춤 -->
+    ACTIVITY_REGION   AS activityRegion,
+    CREATED_AT        AS createdAt
+  </sql>
+
+  <!-- 전체 회원 조회(활성만) -->
+  <select id="findAll" resultType="com.jup.jupging.domain.member.dto.MemberDto">
+    SELECT
+      <include refid="BaseColumns"/>
+    FROM MEMBER
+    WHERE IS_DELETED = 'N'
+    ORDER BY CREATED_AT DESC
+  </select>
+
+  <!-- 이메일로 회원 조회(활성만) -->
+  <select id="findByEmail" parameterType="string"
+          resultType="com.jup.jupging.domain.member.dto.MemberDto">
+    SELECT
+      <include refid="BaseColumns"/>
+    FROM MEMBER
+    WHERE EMAIL = #{email}
+      AND IS_DELETED = 'N'
+  </select>
+
+  <!-- 삭제 여부 무관 이메일 조회 -->
+  <select id="findByEmailIncludeDeleted" parameterType="string"
+          resultType="com.jup.jupging.domain.member.dto.MemberDto">
+    SELECT
+      <include refid="BaseColumns"/>
+    FROM MEMBER
+    WHERE EMAIL = #{email}
+  </select>
+
+  <!-- memberId로 단건 조회(활성만) -->
+  <select id="findById" parameterType="long"
+          resultType="com.jup.jupging.domain.member.dto.MemberDto">
+    SELECT
+      <include refid="BaseColumns"/>
+    FROM MEMBER
+    WHERE ID = #{memberId}
+      AND IS_DELETED = 'N'
+  </select>
+
+  <!-- 신규 회원 등록 (오라클 시퀀스 사용) -->
+  <insert id="insert" parameterType="com.jup.jupging.domain.member.dto.MemberDto">
+    <selectKey keyProperty="memberId" resultType="long" order="BEFORE">
+      SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+    INSERT INTO MEMBER
+      (ID, EMAIL, NICKNAME, PROVIDER, IS_DELETED, CREATED_AT)
+    VALUES
+      (#{memberId}, #{email}, #{nickname}, #{provider}, 'N', SYSTIMESTAMP)
+  </insert>
+
+  <!-- 소프트 삭제 -->
+  <update id="softDeleteById" parameterType="long">
+    UPDATE MEMBER
+       SET IS_DELETED = 'Y'
+     WHERE ID = #{memberId}
+  </update>
+
+  <!-- 탈퇴 복구 -->
+  <update id="reactivate" parameterType="long">
+    UPDATE MEMBER
+       SET IS_DELETED = 'N'
+     WHERE ID = #{memberId}
+  </update>
+
+  <!-- 앱 닉네임 수정 -->
+  <update id="updateAppNickname">
+    UPDATE MEMBER
+       SET APP_NICKNAME = #{appNickname}
+     WHERE ID = #{memberId}
+  </update>
+
+  <!-- 활동 지역 수정 -->
+  <update id="updateActivityRegion">
+    UPDATE MEMBER
+       SET ACTIVITY_REGION = #{activityRegion}
+     WHERE ID = #{memberId}
+  </update>
+
+  <!-- 프로필 이미지 키 수정 -->
+  <update id="updateProfileImageKey">
+    UPDATE MEMBER
+       SET PROFILE_IMAGE_KEY = #{profileImageKey}
+     WHERE ID = #{memberId}
+  </update>
 
 </mapper>
