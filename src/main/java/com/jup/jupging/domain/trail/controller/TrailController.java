@@ -12,9 +12,9 @@ import java.util.List;
 @RequestMapping(value = "/zubging/trails", produces = "application/json; charset=utf8")
 public class TrailController {
 
-    private final com.jup.jupging.domain.trail.service.TrailService trailService;
+    private final TrailService trailService;
 
-    public TrailController(com.jup.jupging.domain.trail.service.TrailService trailService) {
+    public TrailController(TrailService trailService) {
         this.trailService = trailService;
     }
 

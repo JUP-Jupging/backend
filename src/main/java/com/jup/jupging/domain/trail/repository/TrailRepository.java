@@ -1,6 +1,5 @@
 package com.jup.jupging.domain.trail.repository;
 
-import com.jup.jupging.domain.trail.dto.TrailWithDistanceDto;
 import com.jup.jupging.domain.trail.entity.Trail;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;

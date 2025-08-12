@@ -1,7 +1,6 @@
 package com.jup.jupging.domain.trail.mapper;
 
 import com.jup.jupging.domain.trail.dto.TrailDto;
-import com.jup.jupging.domain.trail.dto.TrailWithDistanceDto;
 import com.jup.jupging.domain.trail.entity.Trail;
 
 public class TrailMapper {
