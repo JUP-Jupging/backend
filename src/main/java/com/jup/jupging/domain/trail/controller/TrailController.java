@@ -82,4 +82,20 @@ public class TrailController {
     }
 
 
+    // 사용자 위치, 반경 범위를 받아서 근처 산책로 까지의 거리
+    // 산책로 거리순 정렬할 때마다 요청
+    // param : 사용자 위도, 경도
+    // return : 근처 산책로 목록 List<TrailLocationDto>
+    @GetMapping("/nearest")
+    public ResponseEntity<?> findNearestTrail(@RequestParam double userLat, @RequestParam double userLong){
+        try{
+            TrailWithDistanceDto trailWithDistance = trailService.findNearestTrail(userLat, userLong);
+            return ResponseEntity.ok(trailWithDistance);
+        } catch (Exception e){
+            e.printStackTrace();
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+
 }

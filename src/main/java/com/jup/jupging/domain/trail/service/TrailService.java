@@ -160,4 +160,36 @@ public class TrailService {
     }
 
 
+    @Transactional
+    public TrailWithDistanceDto findNearestTrail(double userLat, double userLong) {
+
+        List<Object[]> results = trailRepository.findNearestTrail(userLat, userLong);
+
+        if(!results.isEmpty()){
+            TrailWithDistanceDto nearest = results.stream()
+                    .map(r -> {
+                        TrailWithDistanceDto dto = new TrailWithDistanceDto();
+                        dto.setTrailId(((Number) r[0]).longValue());
+                        dto.setTrailTypeName((String) r[1]);
+                        dto.setTrailName((String) r[2]);
+                        dto.setCityName((String) r[3]);
+                        dto.setDifficultyLevel((String) r[4]);
+                        dto.setLength((String) r[5]);
+                        dto.setLengthDetail(((Number) r[6]).doubleValue());
+                        dto.setTrackTime((String) r[7]);
+                        dto.setLotNumberAddress((String) r[8]);
+                        dto.setSpotLatitude(((Number) r[9]).doubleValue());
+                        dto.setSpotLongitude(((Number) r[10]).doubleValue());
+                        dto.setReportCount(((Number) r[11]).intValue());
+                        dto.setDistanceToUser(((Number) r[12]).doubleValue());
+                        return dto;
+                    })
+                    .toList().get(0);
+
+            return nearest;
+        }else{
+            throw new RuntimeException("근처 산책로가 없습니다.");
+        }
+
+    }
 }
