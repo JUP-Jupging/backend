@@ -12,7 +12,6 @@ import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
-@RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/token")
 public class TokenController {

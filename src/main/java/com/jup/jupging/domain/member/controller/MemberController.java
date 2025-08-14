@@ -14,11 +14,13 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jup.jupging.domain.member.dto.MemberDto;
 import com.jup.jupging.domain.member.service.IMemberService;
 
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
+@Tag(name = "회원 관리")
 public class MemberController {
 	
 	 private final IMemberService memberService;

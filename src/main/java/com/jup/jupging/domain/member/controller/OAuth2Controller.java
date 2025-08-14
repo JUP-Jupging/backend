@@ -180,7 +180,7 @@ public class OAuth2Controller {
  	}
  	
  	// ✅ 내 정보 조회
-    @GetMapping("/me")
+    @GetMapping("/oauth/me")
     public ResponseEntity<?> getMe(@RequestHeader("Authorization") String authHeader) {
         String token = resolveToken(authHeader);
         if (!jwtUtil.validateToken(token)) {
@@ -197,7 +197,7 @@ public class OAuth2Controller {
     }
     
  // ✅ 로그아웃 (프론트에서 토큰 삭제하면 됨)
-    @PostMapping("/logout")
+    @PostMapping("/oauth/logout")
     public ResponseEntity<String> logout(@RequestHeader("Authorization") String accessTokenWithBearer) {
     	// 1. "Bearer " 접두어 제거
         String accessToken = accessTokenWithBearer.substring(7);
@@ -213,7 +213,7 @@ public class OAuth2Controller {
     }
 
     // ✅ 회원 탈퇴
-    @PostMapping("/withdraw")
+    @PostMapping("/oauth/withdraw")
     public ResponseEntity<String> withdraw(@RequestHeader("Authorization") String authHeader) {
         String token = resolveToken(authHeader);
         if (!jwtUtil.validateToken(token)) {
@@ -234,7 +234,7 @@ public class OAuth2Controller {
         return null;
     }
 	
-    @PostMapping("/refresh")
+    @PostMapping("/oauth/refresh")
     public ResponseEntity<?> refreshAccessToken(@RequestHeader("Authorization") String authHeader) {
         String refreshToken = resolveToken(authHeader);
 
