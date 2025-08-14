@@ -1,6 +1,7 @@
 package com.jup.jupging.domain.member.mapper;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -11,7 +12,7 @@ import com.jup.jupging.domain.member.dto.MemberDto;
 public interface MemberMapper {
 	
 	List<MemberDto> findAll();
-	MemberDto findByEmail(String email);
+	Optional<MemberDto> findByEmail(String email);
 	void insert(MemberDto memberdto);
 	void softDeleteById(Long memberId);
 	MemberDto findByEmailIncludeDeleted(String email);

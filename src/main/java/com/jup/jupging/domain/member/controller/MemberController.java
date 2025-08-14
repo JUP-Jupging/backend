@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jup.jupging.domain.member.dto.MemberDto;
 import com.jup.jupging.domain.member.service.IMemberService;
-import com.jup.jupging.global.oauth.jwt.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -23,12 +22,12 @@ import lombok.RequiredArgsConstructor;
 public class MemberController {
 	
 	 private final IMemberService memberService;
-	    private final JwtUtil jwtUtil;
 
 	    private Long memberIdFrom(String authHeader) {
-	        String token = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
-	        if (!jwtUtil.isValid(token)) throw new IllegalArgumentException("invalid token");
-	        return jwtUtil.getMemberId(token);
+//	        String token = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
+//	        if (!jwtUtil.isValid(token)) throw new IllegalArgumentException("invalid token");
+//	        return jwtUtil.getMemberId(token);
+	    	return 1L;
 	    }
 
 	    // ✅ 내 정보 조회

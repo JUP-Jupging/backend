@@ -21,4 +21,6 @@ public class MemberDto {
 	    private String profileImageUrl; // CDN 완성 URL(또는 key를 따로 들고가면 profileImageKey)
 	    private String activityRegion;  // 활동 지역
 	    private LocalDateTime createdAt; 
+	    private String role;
+	    private String providerId;
 }
