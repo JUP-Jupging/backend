@@ -3,7 +3,6 @@ package com.jup.jupging.domain.plogging.controller;
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
 import com.jup.jupging.domain.plogging.service.PloggingService;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -63,6 +62,11 @@ public class PloggingController {
     @GetMapping("/{ploggingId}")
     public ResponseEntity<PloggingDto> getPlopping(@PathVariable Long ploggingId, @RequestParam Long memberId){
         return ResponseEntity.ok().body(ploggingService.getPlogging(ploggingId, memberId));
+    }
+
+    @GetMapping("/trail/count/{trailId}")
+    public ResponseEntity<Long> getPloggingCountByTrail(@PathVariable Long trailId){
+        return ResponseEntity.ok().body(ploggingService.getPloggingCountByTrail(trailId));
     }
 
 

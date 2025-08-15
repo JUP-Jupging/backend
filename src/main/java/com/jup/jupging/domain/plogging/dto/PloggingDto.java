@@ -23,6 +23,7 @@ public class PloggingDto {
     private Long memberId;
     private String trailName;
     private String cityName;
+    private List<String> images;
 
 
     public PloggingDto(Plogging entity){

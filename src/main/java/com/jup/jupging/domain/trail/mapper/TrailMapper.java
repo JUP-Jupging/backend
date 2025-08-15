@@ -26,6 +26,8 @@ public class TrailMapper {
                 .description(trail.getDescription())
                 .descriptionDetail(trail.getDescriptionDetail())
                 .reportCount(trail.getReportCount())
+                .img1(trail.getImageUrl1())
+                .img2(trail.getImageUrl2())
                 .build();
     }
 

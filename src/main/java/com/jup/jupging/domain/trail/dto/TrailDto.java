@@ -3,6 +3,8 @@ package com.jup.jupging.domain.trail.dto;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Builder
 public class TrailDto {
@@ -25,9 +27,11 @@ public class TrailDto {
     private double spotLatitude;          // 위도
     private double spotLongitude;         // 경도
     private int reportCount;              // 제보 횟수
+    private String img1;
+    private String img2;
 
 
-    public TrailDto(Long trailId, String trailTypeName, String trailName, String description, String cityName, String difficultyLevel, String length, double lengthDetail, String descriptionDetail, String trackTime, String optionDescription,  String toiletDescription, String amenityDescription, String lotNumberAddress, double spotLatitude, double spotLongitude, int reportCount) {
+    public TrailDto(Long trailId, String trailTypeName, String trailName, String description, String cityName, String difficultyLevel, String length, double lengthDetail, String descriptionDetail, String trackTime, String optionDescription, String toiletDescription, String amenityDescription, String lotNumberAddress, double spotLatitude, double spotLongitude, int reportCount, String img1, String img2) {
         this.trailId = trailId;
         this.trailTypeName = trailTypeName;
         this.trailName = trailName;
@@ -45,6 +49,8 @@ public class TrailDto {
         this.spotLatitude = spotLatitude;
         this.spotLongitude = spotLongitude;
         this.reportCount = reportCount;
+        this.img1 = img1;
+        this.img2 = img2;
     }
 
 }

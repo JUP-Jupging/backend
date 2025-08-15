@@ -8,7 +8,6 @@ import com.jup.jupging.domain.plogging.repository.MemberRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingTrashRepository;
 import com.jup.jupging.domain.trail.repository.TrailRepository;
-import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,5 +80,9 @@ public class PloggingService {
     public PloggingDto getPlogging(Long ploggingId, Long memberId) {
         Plogging plogging = ploggingRepository.findByIdAndMember_MemberId(ploggingId, memberId);
         return new PloggingDto(plogging);
+    }
+
+    public Long getPloggingCountByTrail(Long trailId) {
+        return ploggingRepository.countByTrail_TrailId(trailId);
     }
 }

@@ -3,6 +3,9 @@ package com.jup.jupging.domain.trail.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 @Getter
 @Setter
@@ -70,6 +73,12 @@ public class Trail {
 
     @Column(name = "report_count", columnDefinition = "INT DEFAULT 0")
     private int reportCount;
+
+    @Column(name = "img1")
+    private String imageUrl1;
+
+    @Column(name="img2")
+    private String imageUrl2;
 
 
     public Trail(String trailTypeName, String trailName, String description, String cityName, String difficultyLevel, String length, double lengthDetail, String descriptionDetail,String trackTime, String optionDescription, String toiletDescription, String amenityDescription, String lotNumberAddress, double spotLatitude, double spotLongitude, int reportCount) {
