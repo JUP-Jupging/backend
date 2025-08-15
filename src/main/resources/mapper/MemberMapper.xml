@@ -7,7 +7,7 @@
 
   <!-- 공통 컬럼 -->
   <sql id="BaseColumns">
-    ID                AS memberId,
+    MEMBER_ID                AS memberId,
     EMAIL,
     NICKNAME,
     APP_NICKNAME      AS appNickname,
@@ -52,7 +52,7 @@
     SELECT
       <include refid="BaseColumns"/>
     FROM MEMBER
-    WHERE ID = #{memberId}
+    WHERE MEMBER_ID = #{memberId}
       AND IS_DELETED = 'N'
   </select>
 
@@ -62,7 +62,7 @@
       SELECT MEMBER_SEQ.NEXTVAL FROM DUAL
     </selectKey>
     INSERT INTO MEMBER
-      (ID, EMAIL, NICKNAME, PROVIDER, IS_DELETED, CREATED_AT)
+      (MEMBER_ID, EMAIL, NICKNAME, PROVIDER, IS_DELETED, CREATED_AT)
     VALUES
       (#{memberId}, #{email}, #{nickname}, #{provider}, 'N', SYSTIMESTAMP)
   </insert>
@@ -71,35 +71,35 @@
   <update id="softDeleteById" parameterType="long">
     UPDATE MEMBER
        SET IS_DELETED = 'Y'
-     WHERE ID = #{memberId}
+     WHERE MEMBER_ID = #{memberId}
   </update>
 
   <!-- 탈퇴 복구 -->
   <update id="reactivate" parameterType="long">
     UPDATE MEMBER
        SET IS_DELETED = 'N'
-     WHERE ID = #{memberId}
+     WHERE MEMBER_ID = #{memberId}
   </update>
 
   <!-- 앱 닉네임 수정 -->
   <update id="updateAppNickname">
     UPDATE MEMBER
        SET APP_NICKNAME = #{appNickname}
-     WHERE ID = #{memberId}
+     WHERE MEMBER_ID = #{memberId}
   </update>
 
   <!-- 활동 지역 수정 -->
   <update id="updateActivityRegion">
     UPDATE MEMBER
        SET ACTIVITY_REGION = #{activityRegion}
-     WHERE ID = #{memberId}
+     WHERE MEMBER_ID = #{memberId}
   </update>
 
   <!-- 프로필 이미지 키 수정 -->
   <update id="updateProfileImageKey">
     UPDATE MEMBER
        SET PROFILE_IMAGE_KEY = #{profileImageKey}
-     WHERE ID = #{memberId}
+     WHERE MEMBER_ID = #{memberId}
   </update>
 
 </mapper>

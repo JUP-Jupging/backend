@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/zubging/trails", produces = "application/json; charset=utf8")
+@RequestMapping(value = "/trails", produces = "application/json; charset=utf8")
 public class TrailController {
 
     private final TrailService trailService;

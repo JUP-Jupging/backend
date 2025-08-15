@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/zubging/trash-can", produces = "application/json; charset=utf8")
+@RequestMapping(value = "/trash-can", produces = "application/json; charset=utf8")
 public class TrashCanController {
 
     private final TrashCanService trashCanService;
