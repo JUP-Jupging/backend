@@ -1,7 +1,6 @@
 package com.jup.jupging.domain.member.controller;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -12,7 +11,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.util.LinkedMultiValueMap;
@@ -21,7 +19,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
@@ -30,11 +27,13 @@ import com.jup.jupging.domain.member.dto.MemberDto;
 import com.jup.jupging.domain.member.mapper.MemberMapper;
 import com.jup.jupging.global.common.oauth2.JwtUtil;
 
+import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@Hidden
 public class OAuth2Controller {
 	
 	private final MemberMapper memberMapper;
@@ -144,12 +143,12 @@ public class OAuth2Controller {
     
  	// 🔹 JWT 발급 + 응답 데이터 구성 + Redis에 토큰 저장
  	private Map<String, Object> issueJwtResponse(MemberDto member) {
- 		String accessToken = jwtUtil.createAccessToken(member.getEmail());
- 		String refreshToken = jwtUtil.createRefreshToken(member.getEmail());
+ 		String accessToken = jwtUtil.createAccessToken(member.getMemberId());
+ 		String refreshToken = jwtUtil.createRefreshToken(member.getMemberId());
 
  		// Redis에 Refresh Token 저장
  		redisTemplate.opsForValue().set(
- 				"RT:" + member.getEmail(), 
+ 				"RT:" + member.getMemberId(), 
  				refreshToken,
  				jwtUtil.getRefreshTokenExpirationMillis(),
  				TimeUnit.MILLISECONDS
@@ -203,11 +202,11 @@ public class OAuth2Controller {
         String accessToken = accessTokenWithBearer.substring(7);
 
         // 2. Access Token에서 사용자 이메일 정보 가져오기
-        String email = jwtUtil.getEmailFromToken(accessToken);
+        Long memberId = Long.parseLong(jwtUtil.getMemberIdFromToken(accessToken));
 
         // 3. Redis에서 해당 유저의 Refresh Token 삭제 ⭐️
-        if (redisTemplate.opsForValue().get("RT:" + email) != null) {
-            redisTemplate.delete("RT:" + email);
+        if (redisTemplate.opsForValue().get("RT:" + memberId) != null) {
+            redisTemplate.delete("RT:" + memberId);
         }
         return ResponseEntity.ok("프론트에서 토큰 삭제 시 로그아웃 완료");
     }
@@ -246,9 +245,8 @@ public class OAuth2Controller {
         // 2. 사용자 조회
         Long memberId = jwtUtil.getMemberId(refreshToken);
         MemberDto member = memberMapper.findById(memberId);
-        String email = member.getEmail();
         
-        String savedRefreshToken = redisTemplate.opsForValue().get("RT:" + email);
+        String savedRefreshToken = redisTemplate.opsForValue().get("RT:" + memberId);
         
      // 4. Redis에 토큰이 없거나, 요청된 토큰과 일치하지 않으면 예외 처리
         if (savedRefreshToken == null || !savedRefreshToken.equals(refreshToken)) {
@@ -256,7 +254,7 @@ public class OAuth2Controller {
         }
 
         // 5. access token 재발급
-        String newAccessToken = jwtUtil.createAccessToken(email);
+        String newAccessToken = jwtUtil.createAccessToken(memberId);
 
         return ResponseEntity.ok(Map.of(
             "accessToken", newAccessToken

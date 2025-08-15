@@ -37,14 +37,18 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         // 2. 토큰 유효성 검사
         if (token != null && jwtUtil.validateToken(token)) {
             // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가져와서 SecurityContext에 저장
-            String email = jwtUtil.getEmailFromToken(token);
+            String email = jwtUtil.getMemberIdFromToken(token);
             
             memberMapper.findByEmail(email).ifPresent(member -> {
+            	String role = member.getRole();
+            	if (!StringUtils.hasText(role)) { // null 또는 빈 문자열일 경우
+            	    role = "ROLE_USER";
+            	}
                 // 인증 객체 생성
                 Authentication authentication = new UsernamePasswordAuthenticationToken(
                         member, // principal (인증된 사용자 객체)
                         null, // credentials (자격 증명, 보통 null)
-                        Collections.singleton(new SimpleGrantedAuthority(member.getRole())) // authorities (권한)
+                        Collections.singleton(new SimpleGrantedAuthority(role)) // authorities (권한)
                 );
                 // SecurityContext에 인증 정보 저장
                 SecurityContextHolder.getContext().setAuthentication(authentication);

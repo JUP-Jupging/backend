@@ -44,7 +44,7 @@ public class TokenController {
         }
 
         // 4. 토큰에서 이메일 추출 및 Redis와 대조
-        String email = jwtUtil.getEmailFromToken(refreshToken);
+        String email = jwtUtil.getMemberIdFromToken(refreshToken);
         String redisRefreshToken = redisTemplate.opsForValue().get(email);
 
         if (!refreshToken.equals(redisRefreshToken)) {
@@ -52,7 +52,8 @@ public class TokenController {
         }
 
         // 5. 새로운 Access Token 생성
-        String newAccessToken = jwtUtil.createAccessToken(email);
+//        String newAccessToken = jwtUtil.createAccessToken(email);
+        String newAccessToken = null;
 
         return ResponseEntity.ok(newAccessToken);
     }

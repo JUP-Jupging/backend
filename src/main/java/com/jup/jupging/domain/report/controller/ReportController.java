@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.jup.jupging.domain.report.dto.ReportReq;
 import com.jup.jupging.domain.report.dto.ReportSummaryDto;
 import com.jup.jupging.domain.report.service.IReportService;
-import com.jup.jupging.global.oauth.jwt.JwtUtil;
+import com.jup.jupging.global.common.oauth2.JwtUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,9 +28,8 @@ public class ReportController {
     private final JwtUtil jwtUtil;
 
     private Long memberIdFrom(String authHeader) {
-        String token = (authHeader != null && authHeader.startsWith("Bearer "))
-                ? authHeader.substring(7) : null;
-        if (token == null || !jwtUtil.isValid(token)) {
+        String token = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
+        if (token == null || !jwtUtil.validateToken(token)) {
             throw new IllegalArgumentException("invalid token");
         }
         return jwtUtil.getMemberId(token); // subject를 Long으로 반환
@@ -61,7 +60,7 @@ public class ReportController {
     @GetMapping("/reports/me")
     public ResponseEntity<?> myReports(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-        Long memberId = 1L;
+    	Long memberId = memberIdFrom(authHeader);
 //        if (memberId == null) {
 //            return ResponseEntity.status(401).body("unauthorized");
 //        }
@@ -71,8 +70,9 @@ public class ReportController {
     }
     
     @GetMapping("/reports/me/{reportId}")
-    public ResponseEntity<?> myReportDetail(@PathVariable("reportId") Long reportId){
-    	Long memberId = 1L;
+    public ResponseEntity<?> myReportDetail(@RequestHeader(value = "Authorization", required = false) String authHeader
+    		, @PathVariable("reportId") Long reportId){
+    	Long memberId = memberIdFrom(authHeader);
     	var dto = reportService.findMyReportDetail(reportId, memberId);
     	return(dto == null) ? ResponseEntity.status(404).body("report not found") : ResponseEntity.ok(dto); 
     }

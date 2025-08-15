@@ -52,7 +52,7 @@
     SELECT
       <include refid="BaseColumns"/>
     FROM MEMBER
-    WHERE ID = #{memberId}
+    WHERE MEMBER_ID = #{memberId}
       AND IS_DELETED = 'N'
   </select>
 

@@ -44,26 +44,26 @@ public class JwtUtil {
     /**
      * Access Token 생성
      */
-    public String createAccessToken(String email) {
-    	return createToken(email, accessTokenExpirationMillis);
+    public String createAccessToken(Long memberId) {
+    	return createToken(memberId, accessTokenExpirationMillis);
     }
     
     /**
      * Refresh Token 생성
      */
-    public String createRefreshToken(String email) {
-        return createToken(email, refreshTokenExpirationMillis);
+    public String createRefreshToken(Long memberId) {
+        return createToken(memberId, refreshTokenExpirationMillis);
     }
     
     /**
      * 토큰 생성 로직 통합
      */
-    private String createToken(String email, long expirationMillis) {
+    private String createToken(Long memberId, long expirationMillis) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + expirationMillis);
 
         return Jwts.builder()
-                .setSubject(email)
+                .setSubject(String.valueOf(memberId))
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key, SignatureAlgorithm.HS256)
@@ -75,7 +75,7 @@ public class JwtUtil {
      * @param token 검증할 Access Token
      * @return 사용자 이메일
      */
-    public String getEmailFromToken(String token) {
+    public String getMemberIdFromToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()

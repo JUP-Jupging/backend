@@ -34,26 +34,27 @@ public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
         OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
 
         // OAuth2User로부터 email 정보를 추출
-        String email = (String) oAuth2User.getAttributes().get("email");
+//        String email = (String) oAuth2User.getAttributes().get("email");
+        Long memberId =  (Long) oAuth2User.getAttributes().get("memberId");
         
         // email이 없다면 예외 발생 (카카오 비동의 등)
-        if (email == null) {
+        if (memberId == null) {
             log.error("로그인한 사용자의 이메일 정보를 찾을 수 없습니다.");
             response.sendRedirect("/login-error"); // 예시 에러 처리
             return;
         }
 
         // 1. Access Token 생성
-        String accessToken = jwtUtil.createAccessToken(email);
+        String accessToken = jwtUtil.createAccessToken(memberId);
         log.info("Access Token 생성 완료: {}", accessToken);
 
         // 2. Refresh Token 생성
-        String refreshToken = jwtUtil.createRefreshToken(email);
+        String refreshToken = jwtUtil.createRefreshToken(memberId);
         log.info("Refresh Token 생성 완료: {}", refreshToken);
 
         // 3. Redis에 Refresh Token 저장 (Key: email, Value: refreshToken)
         redisTemplate.opsForValue().set(
-                email,
+        		String.valueOf(memberId),
                 refreshToken,
                 7, // 만료 시간
                 TimeUnit.DAYS // 만료 시간 단위
