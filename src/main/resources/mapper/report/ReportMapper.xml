@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jup.jupging.domain.report.mapper.ReportMapper">
+  <insert id="insertReport" parameterType="com.jup.jupging.domain.report.entity.Report">
+    INSERT INTO REPORT
+      (MEMBER_ID, TRAIL_ID, TITLE, LAT, LNG, IMAGE_URL,
+       PAPER, CAN, PLASTIC, VINYL, GLASS, STYRO, BATTERY, IS_PICKED, CREATED_AT)
+    VALUES
+      (#{memberId}, #{trailId}, #{title}, #{lat}, #{lng}, #{imageUrl},
+       #{paper}, #{can}, #{plastic}, #{vinyl}, #{glass}, #{styro}, #{battery}, 'N', SYSDATE)
+  </insert>
+  
+  <select id="findMyReports" resultType="com.jup.jupging.domain.report.dto.ReportSummaryDto">
+  	SELECT
+  		r.REPORT_ID AS reportId,
+  		r.TRAIL_ID AS trailID,
+  		r.TITLE AS title,
+  		r.LAT AS lat,
+  		r.LNG AS lng,
+  		r.IMAGE_URL AS imageUrl,
+  		t.TRAIL_NAME AS trailName,
+  		t.TRAIL_TYPE_NAME AS trailTypeName,
+  		r.IS_PICKED AS ispicked,
+  		r.CREATED_AT AS createdAt
+  	FROM REPORT r
+  	LEFT JOIN TRAIL t on t.TRAIL_ID = r.TRAIL_ID
+  	WHERE r.MEMBER_ID = #{memberId}
+  	ORDER BY r.CREATED_AT DESC
+  </select>
+  
+  <select id="findMyReportDetail" resultType="com.jup.jupging.domain.report.dto.ReportDetailDto">
+  	SELECT 
+  		r.REPORT_ID AS reportId,
+  		r.MEMBER_ID AS memberId,
+  		r.TRAIL_ID AS trailId,
+  		r.TITLE AS title,
+  		t.TRAIL_NAME AS trailName,
+  		t.TRAIL_TYPE_NAME AS trailTypeName,
+  		r.LAT AS lat,
+  		r.LNG AS lng,
+  		r.IMAGE_URL AS imageUrl,
+  		NVL(r.PAPER,0) AS paper,
+  		NVL(r.CAN,0) AS can,
+  		NVL(r.PLASTIC,0) AS plastic,
+  		NVL(r.VINYL,0) AS vinyl,
+  		NVL(r.GLASS,0) AS glass,
+  		NVL(r.STYRO,0) AS styro,
+  		NVL(r.BATTERY,0) AS battery,
+  		r.IS_PICKED AS ispicked,
+  		r.CREATED_AT AS createdAt
+  	FROM REPORT r
+  	LEFT JOIN TRAIL t on t.TRAIL_ID = r.TRAIL_ID
+  	WHERE r.REPORT_ID = #{reportId}
+  		AND r.MEMBER_ID = #{memberId} 
+  </select>
+  
+  <select id="findReportDetail" resultType="com.jup.jupging.domain.report.dto.ReportDetailDto">
+  	SELECT 
+  		r.REPORT_ID AS reportId,
+  		r.MEMBER_ID AS memberId,
+  		r.TRAIL_ID AS trailId,
+  		r.TITLE AS title,
+  		t.TRAIL_NAME AS trailName,
+  		t.TRAIL_TYPE_NAME AS trailTypeName,
+  		r.LAT AS lat,
+  		r.LNG AS lng,
+  		r.IMAGE_URL AS imageUrl,
+  		NVL(r.PAPER,0) AS paper,
+  		NVL(r.CAN,0) AS can,
+  		NVL(r.PLASTIC,0) AS plastic,
+  		NVL(r.VINYL,0) AS vinyl,
+  		NVL(r.GLASS,0) AS glass,
+  		NVL(r.STYRO,0) AS styro,
+  		NVL(r.BATTERY,0) AS battery,
+  		r.IS_PICKED AS is_picked,
+  		r.CREATED_AT AS createdAt
+  	FROM REPORT r
+  	LEFT JOIN TRAIL t on t.TRAIL_ID = r.TRAIL_ID
+  	WHERE r.REPORT_ID = #{reportId}
+  		 
+  </select>
+  
+  <update id="pickReport">
+  	UPDATE REPORT
+  		SET IS_PICKED = 'Y'
+  	WHERE REPORT_ID = #{reportId}
+  
+  	
+  
+  </update>
+  
+</mapper>
