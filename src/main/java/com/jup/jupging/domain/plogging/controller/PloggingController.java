@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/zubging/plogging", produces = "application/json; charset=utf8")
+@RequestMapping(value = "/plogging", produces = "application/json; charset=utf8")
 public class PloggingController {
     private final PloggingService ploggingService;
     public PloggingController(PloggingService ploggingService) {
@@ -56,11 +56,10 @@ public class PloggingController {
     public String insertPickedTrash(@PathVariable Long ploggingId, @PathVariable Long reportId){
 
         String result = ploggingService.insertPickedTrash(ploggingId, reportId);
-
-        return null;
+        return result;
     }
-    @GetMapping("/{ploggingId}")
-    public ResponseEntity<PloggingDto> getPlopping(@PathVariable Long ploggingId, @RequestParam Long memberId){
+    @GetMapping("/{ploggingId}/members/{memberId}")
+    public ResponseEntity<PloggingDto> getPlopping(@PathVariable Long ploggingId, @PathVariable Long memberId){
         return ResponseEntity.ok().body(ploggingService.getPlogging(ploggingId, memberId));
     }
 

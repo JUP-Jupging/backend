@@ -23,7 +23,7 @@ public class PloggingDto {
     private Long memberId;
     private String trailName;
     private String cityName;
-    private List<String> images;
+    private String image;
 
 
     public PloggingDto(Plogging entity){
@@ -36,6 +36,7 @@ public class PloggingDto {
         this.trailName = entity.getTrail().getTrailName();
         this.cityName = entity.getTrail().getCityName();
         this.memberId = entity.getMember().getMemberId();
+        this.image = entity.getImageUrl();
         this.pickedTrashList = entity.getTrashList().stream().map(e -> {
             PloggingTrashDto dto = new PloggingTrashDto();
             dto.setReportId(e.getReportId());
