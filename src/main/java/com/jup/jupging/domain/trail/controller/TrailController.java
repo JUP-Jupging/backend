@@ -18,6 +18,9 @@ public class TrailController {
         this.trailService = trailService;
     }
 
+
+
+
     // DB INSERT용 메서드
     @PostMapping
     public ResponseEntity<?> insertAllTrailData() {
