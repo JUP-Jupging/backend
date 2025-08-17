@@ -1,6 +1,5 @@
 package com.jup.jupging.domain.plogging.service;
 
-<<<<<<< HEAD
 import java.util.List;
 import com.jup.jupging.domain.plogging.entity.Plogging;
 import com.jup.jupging.domain.plogging.entity.PloggingTrash;

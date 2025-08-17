@@ -1,6 +1,5 @@
 package com.jup.jupging.domain.plogging.dto;
 
-<<<<<<< HEAD
 import com.jup.jupging.domain.plogging.entity.Plogging;
 import lombok.Data;
 import java.sql.Date;

@@ -1,18 +1,22 @@
 package com.jup.jupging.domain.plogging.controller;
 
-import com.jup.jupging.domain.plogging.dto.PloggingDto;
-import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
-import com.jup.jupging.domain.plogging.service.PloggingService;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
 import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
+import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
 import com.jup.jupging.domain.plogging.service.IPloggingService;
-import com.jup.jupging.global.oauth.jwt.JwtUtil;
+import com.jup.jupging.domain.plogging.service.PloggingService;
+import com.jup.jupging.global.common.oauth2.JwtUtil;
 
 @RestController
 @RequestMapping(value = "/plogging", produces = "application/json; charset=utf8")
@@ -77,14 +81,14 @@ public class PloggingController {
     }
 
 	@Autowired
-	IPloggingService ploggingService;
+	IPloggingService ploggingService2;
 	
 	private JwtUtil jwtUtil;
 	
 	private Long memberIdFrom(String authHeader) {
         String token = (authHeader != null && authHeader.startsWith("Bearer "))
                 ? authHeader.substring(7) : null;
-        if (token == null || !jwtUtil.isValid(token)) {
+        if (token == null || !jwtUtil.validateToken(token)) {
             throw new IllegalArgumentException("invalid token");
         }
         return jwtUtil.getMemberId(token); // subject를 Long으로 반환
@@ -93,11 +97,12 @@ public class PloggingController {
 	@GetMapping("/plogging/me")
 	public ResponseEntity<?> myReports(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 
+		Long memberId = this.memberIdFrom(authHeader);
         if (memberId == null) {
             return ResponseEntity.status(401).body("unauthorized");
         }
 
-        List<PloggingDto> list = ploggingService.findMyPlogging(memberId);
+        List<PloggingDto> list = ploggingService2.findMyPlogging(memberId);
         return ResponseEntity.ok(list);
     }
 }
