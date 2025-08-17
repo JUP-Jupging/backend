@@ -1,8 +1,11 @@
 package com.jup.jupging.domain.plogging.service;
 
+<<<<<<< HEAD
+import java.util.List;
 import com.jup.jupging.domain.plogging.entity.Plogging;
 import com.jup.jupging.domain.plogging.entity.PloggingTrash;
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
+import com.jup.jupging.domain.plogging.mapper.PloggingMapper;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
 import com.jup.jupging.domain.plogging.repository.MemberRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingRepository;
@@ -10,16 +13,18 @@ import com.jup.jupging.domain.plogging.repository.PloggingTrashRepository;
 import com.jup.jupging.domain.trail.repository.TrailRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
-public class PloggingService {
+public class PloggingService implements IPloggingService{
     private final MemberRepository memberRepository;
     private final TrailRepository trailRepository;
     private final PloggingRepository ploggingRepository;
     private final PloggingTrashRepository ploggingTrashRepository;
+    @Autowired                                                                                                                                                                              PloggingMapper ploggingMapper;
 
     public PloggingService(MemberRepository memberRepository, TrailRepository trailRepository, PloggingRepository ploggingRepository, PloggingTrashRepository ploggingTrashRepository) {
         this.memberRepository = memberRepository;
@@ -27,6 +32,8 @@ public class PloggingService {
         this.ploggingRepository = ploggingRepository;
         this.ploggingTrashRepository = ploggingTrashRepository;
     }
+    @Override                                                                                                                                                                               public List<PloggingDto> findMyPlogging(Long memberId) {                                                                                                                        
+                    return ploggingMapper.findMyPlogging(memberId);                                                                                                                                 }
 
 
     // 플로깅 중일 때 쓰레기 줍기 요청 시

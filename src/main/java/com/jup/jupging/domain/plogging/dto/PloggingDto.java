@@ -1,7 +1,10 @@
 package com.jup.jupging.domain.plogging.dto;
 
+<<<<<<< HEAD
 import com.jup.jupging.domain.plogging.entity.Plogging;
 import lombok.Data;
+import java.sql.Date;
+
 
 import java.time.LocalDate;
 import java.util.List;
@@ -24,6 +27,8 @@ public class PloggingDto {
     private String trailName;
     private String cityName;
     private String image;
+
+   private String trailTypeName;
 
 
     public PloggingDto(Plogging entity){
