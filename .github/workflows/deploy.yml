@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+env:
+  ECR_REPOSITORY_NAME: jupging-server-pub 
+  ECR_PUBLIC_REGISTRY: public.ecr.aws/t8l1n4n8
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -26,23 +30,26 @@ jobs:
 
       - name: AWS Resource에 접근할 수 있게 AWS credentials 설정
         uses: aws-actions/configure-aws-credentials@v4
+        # aws-region: ap-northeast-2
         with:
-          aws-region: ap-northeast-2
+          aws-region: us-east-1
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       - name: ECR에 로그인하기
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v2
+        run: |
+          aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin public.ecr.aws
         
       - name: Docker 이미지 생성
-        run: docker build -t jupging-server .
+        run: docker build -t ${{ env.ECR_REPOSITORY_NAME }} .
 
+      # run: docker tag jupging-server ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
       - name: Docker 이미지에 Tag 붙이기
-        run: docker tag jupging-server ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
+        run: docker tag ${{ env.ECR_REPOSITORY_NAME }}:latest ${{ env.ECR_PUBLIC_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:latest
 
+      # run: docker push ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
       - name: ECR에 Docker 이미지 Push하기
-        run: docker push ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
+        run: docker push ${{ env.ECR_PUBLIC_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:latest
 
       - name: SSH로 EC2에 접속하기
         uses: appleboy/ssh-action@v1.0.3
@@ -51,10 +58,13 @@ jobs:
           username: ${{ secrets.EC2_USERNAME }}
           key: ${{ secrets.EC2_PRIVATE_KEY }}
           script_stop: true
+          # aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+          # docker pull ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
+          # docker run -d --name boot -p 8080:8080 --network jupging-network ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
           script: |
-            aws ecr get-login-password --region ${{ secrets.AWS_REGION }} | docker login --username AWS --password-stdin ${{ steps.login-ecr.outputs.registry }}
+            aws ecr-public get-login-password --region us-east-1 | docker login --username AWS --password-stdin ${{ env.ECR_PUBLIC_REGISTRY }}
 
             docker stop boot || true
             docker rm boot || true
-            docker pull ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
-            docker run -d --name boot -p 8080:8080 --network jupging-network ${{ steps.login-ecr.outputs.registry }}/jupging-server:latest
+            docker pull ${{ env.ECR_PUBLIC_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:latest
+            docker run -d --name boot -p 8080:8080 --network jupging-network ${{ env.ECR_PUBLIC_REGISTRY }}/${{ env.ECR_REPOSITORY_NAME }}:latest
