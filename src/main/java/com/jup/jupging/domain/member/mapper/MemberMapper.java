@@ -26,5 +26,5 @@ public interface MemberMapper {
                 @Param("activityRegion") String activityRegion);
 
 	 int updateProfileImageKey(@Param("memberId") Long memberId,
-                 @Param("profileImageKey") String profileImageKey);
+                 @Param("profileImageUrl") String profileImageUrl);
 }

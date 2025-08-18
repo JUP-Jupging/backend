@@ -18,16 +18,12 @@ public class TrailController {
         this.trailService = trailService;
     }
 
-
-
-
     // DB INSERT용 메서드
     @PostMapping
     public ResponseEntity<?> insertAllTrailData() {
         String result = trailService.insertAllTrailData();
         return ResponseEntity.ok(result);
     }
-
 
     // 특정 산책로 상세 조회
     @GetMapping("/{trailId}")
@@ -36,8 +32,6 @@ public class TrailController {
         TrailDto trailDto = trailService.getTrailDetail(trailId);
         return ResponseEntity.ok(trailDto);
     }
-
-
 
     // 산책로 목록 조회 : 난이도(difficultyLevel), 지역명(city_name) 필터링
     // 이름	        타입	    필수	    설명
@@ -51,8 +45,6 @@ public class TrailController {
         return ResponseEntity.ok(trails);
     }
 
-
-
     // 산책로 검색
     @GetMapping("/search")
     public ResponseEntity<?> findTrailsByKeyword(@RequestParam String keyword){
@@ -65,7 +57,6 @@ public class TrailController {
         }
         return ResponseEntity.ok(searchTrails);
     }
-
 
     // 사용자 위치, 반경 범위를 받아서 근처 산책로 까지의 거리
     // 산책로 거리순 정렬할 때마다 요청
@@ -84,7 +75,6 @@ public class TrailController {
         return ResponseEntity.ok(trailWithDistances);
     }
 
-
     // 사용자 위치, 반경 범위를 받아서 근처 산책로 까지의 거리
     // 산책로 거리순 정렬할 때마다 요청
     // param : 사용자 위도, 경도
@@ -100,7 +90,4 @@ public class TrailController {
         }
     }
     
-    
-
-
 }

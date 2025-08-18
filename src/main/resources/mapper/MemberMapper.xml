@@ -98,7 +98,7 @@
   <!-- 프로필 이미지 키 수정 -->
   <update id="updateProfileImageKey">
     UPDATE MEMBER
-       SET PROFILE_IMAGE_KEY = #{profileImageKey}
+       SET PROFILE_IMAGE_URL = #{profileImageUrl}
      WHERE MEMBER_ID = #{memberId}
   </update>
 
