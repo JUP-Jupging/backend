@@ -75,7 +75,7 @@ public class OAuth2Controller {
     
     @PostMapping("/auth/kakao/native")
 //    public ResponseEntity<?> login(@RequestParam("code") String code) {
-    public ResponseEntity<?> login(@RequestHeader("Authorization") String accessToken) {
+    public ResponseEntity<?> login(@RequestHeader("Authorization") String authHeader) {
     	
 //    	HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
@@ -92,6 +92,7 @@ public class OAuth2Controller {
 //                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponse.class);
 
 //    	String kakaoAccessToken = response.getBody().getAccess_token();
+    	String accessToken = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
     	System.out.println(accessToken);
     	String kakaoAccessToken = accessToken;
     	
