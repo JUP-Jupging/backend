@@ -92,6 +92,7 @@ public class OAuth2Controller {
 //                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponse.class);
 
 //    	String kakaoAccessToken = response.getBody().getAccess_token();
+    	System.out.println(accessToken);
     	String kakaoAccessToken = accessToken;
     	
     	HttpHeaders headers2 = new HttpHeaders();
