@@ -73,24 +73,26 @@ public class OAuth2Controller {
 //        return urlMap;
 //    }
     
-    @GetMapping("/login/oauth2/code/kakao")
-    public ResponseEntity<?> login(@RequestParam("code") String code) {
+    @PostMapping("/auth/kakao/native")
+//    public ResponseEntity<?> login(@RequestParam("code") String code) {
+    public ResponseEntity<?> login(String accessToken) {
     	
-    	HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//    	HttpHeaders headers = new HttpHeaders();
+//        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+//
+//        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
+//        params.add("grant_type", "authorization_code");
+//        params.add("client_id", clientId);
+//        params.add("redirect_uri", redirectUri);
+//        params.add("code", code);
+//
+//        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
+//
+//        ResponseEntity<KakaoTokenResponse> response = restTemplate.postForEntity(
+//                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponse.class);
 
-        MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", clientId);
-        params.add("redirect_uri", redirectUri);
-        params.add("code", code);
-
-        HttpEntity<MultiValueMap<String, String>> request = new HttpEntity<>(params, headers);
-
-        ResponseEntity<KakaoTokenResponse> response = restTemplate.postForEntity(
-                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponse.class);
-
-    	String kakaoAccessToken = response.getBody().getAccess_token();
+//    	String kakaoAccessToken = response.getBody().getAccess_token();
+    	String kakaoAccessToken = accessToken;
     	
     	HttpHeaders headers2 = new HttpHeaders();
         headers2.setBearerAuth(kakaoAccessToken);
