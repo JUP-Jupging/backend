@@ -39,6 +39,7 @@ public class MemberController {
 	 @GetMapping("/me")
 	 public ResponseEntity<?> getMe(@RequestHeader("Authorization") String authHeader) {
 		 Long memberId = memberIdFrom(authHeader);
+		 System.out.println("MemberController - "+ memberId);
 		 MemberDto me = memberService.getById(memberId);
 		 if (me == null) return ResponseEntity.status(404).body("회원 정보를 찾을 수 없음");
 		 return ResponseEntity.ok(me);

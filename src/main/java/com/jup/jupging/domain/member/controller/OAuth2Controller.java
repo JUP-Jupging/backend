@@ -92,8 +92,9 @@ public class OAuth2Controller {
 //                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponse.class);
 
 //    	String kakaoAccessToken = response.getBody().getAccess_token();
+    	System.out.println("authHeader : " + authHeader);
     	String accessToken = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
-    	System.out.println(accessToken);
+    	System.out.println("accessToken : " + accessToken);
     	String kakaoAccessToken = accessToken;
     	
     	HttpHeaders headers2 = new HttpHeaders();
@@ -120,6 +121,7 @@ public class OAuth2Controller {
 
 		MemberDto member = findOrCreate(kakaoUser.getEmail(), kakaoUser.getNickname(), "kakao");
 		Map<String, Object> issueJwtResponse = issueJwtResponse(member);
+		System.out.println("response: "+issueJwtResponse);
 		
     	return ResponseEntity.ok(issueJwtResponse);
     }
