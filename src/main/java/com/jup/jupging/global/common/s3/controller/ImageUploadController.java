@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,6 +23,17 @@ import lombok.RequiredArgsConstructor;
 public class ImageUploadController {
 
 	private final S3Uploader s3Uploader;
+	
+	@PostMapping("/images")
+	public String upload(@RequestParam("images") MultipartFile multipartFile) throws IOException {
+		return s3Uploader.upload(multipartFile, "static");
+	}
+	
+	@GetMapping("/images/delete")
+	public String delete(@RequestParam("fileUrl") String fileUrl) {
+		s3Uploader.delete(fileUrl);
+		return "good";
+	}
 	
 	@PostMapping("/profile")
 	public ResponseEntity<String> insertProfileImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
