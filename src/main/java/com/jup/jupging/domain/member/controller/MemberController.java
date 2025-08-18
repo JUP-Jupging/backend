@@ -57,7 +57,7 @@ public class MemberController {
 
 	 // ✅ 앱 닉네임 수정
 	 @PatchMapping("/me/app_nickname")
-	 public ResponseEntity<?> changeAppNickname(@RequestHeader("Authorization") String authHeader,
+	 public ResponseEntity<?> changeAppNickname(@RequestHeader(value = "Authorization", required = false) String authHeader,
 			 @RequestBody AppNicknameReq req) {
 		 Long memberId = memberIdFrom(authHeader);
 		 memberService.updateAppNickname(memberId, req.appNickname());
@@ -66,7 +66,7 @@ public class MemberController {
 
 	 // ✅ 활동 지역 수정
 	 @PatchMapping("/me/activity_region")
-	 public ResponseEntity<?> changeActivityRegion(@RequestHeader("Authorization") String authHeader,
+	 public ResponseEntity<?> changeActivityRegion(@RequestHeader(value = "Authorization", required = false) String authHeader,
 			 @RequestBody ActivityRegionReq req) {
 		 Long memberId = memberIdFrom(authHeader);
 		 memberService.updateActivityRegion(memberId, req.activityRegion());
