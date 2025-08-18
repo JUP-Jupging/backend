@@ -76,10 +76,10 @@ public class TrailController {
 
         List<TrailWithDistanceDto> trailWithDistances = trailService.findTrailsNearby(userLat, userLong);
 
-        System.out.println("검색 결과 개수: " + trailWithDistances.size());
-        for (TrailWithDistanceDto trail : trailWithDistances) {
-            System.out.println(trail);
-        }
+//        System.out.println("검색 결과 개수: " + trailWithDistances.size());
+//        for (TrailWithDistanceDto trail : trailWithDistances) {
+//            System.out.println(trail);
+//        }
 
         return ResponseEntity.ok(trailWithDistances);
     }
@@ -99,6 +99,8 @@ public class TrailController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
+    
+    
 
 
 }
