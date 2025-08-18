@@ -39,7 +39,7 @@ public class MemberController {
 
 	 // ✅ 내 정보 조회
 	 @GetMapping("/me")
-	 public ResponseEntity<?> getMe(@RequestHeader("Authorization") String authHeader) {
+	 public ResponseEntity<?> getMe(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 		 Long memberId = memberIdFrom(authHeader);
 		 log.info("MemberController - "+ memberId);
 		 MemberDto me = memberService.getById(memberId);
@@ -49,7 +49,7 @@ public class MemberController {
 
 	 // ✅ 회원 탈퇴(소프트 삭제)
 	 @DeleteMapping("/me")
-	 public ResponseEntity<?> withdraw(@RequestHeader("Authorization") String authHeader) {
+	 public ResponseEntity<?> withdraw(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 		 Long memberId = memberIdFrom(authHeader);
 		 memberService.softDelete(memberId);
 		 return ResponseEntity.ok(Map.of("message", "회원 탈퇴 완료"));
@@ -75,7 +75,7 @@ public class MemberController {
 
 	 // ✅ 프로필 이미지 반영 (S3 업로드 후 key 저장)
 	 @PatchMapping("/me/profile_image")
-	 public ResponseEntity<?> changeProfileImage(@RequestHeader("Authorization") String authHeader,
+	 public ResponseEntity<?> changeProfileImage(@RequestHeader(value = "Authorization", required = false) String authHeader,
 			 @RequestBody ProfileImageReq req) {
 		 Long memberId = memberIdFrom(authHeader);
 		 memberService.updateProfileImageKey(memberId, req.profileImageKey());
