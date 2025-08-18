@@ -83,6 +83,7 @@ public class PloggingController {
 	@Autowired
 	IPloggingService ploggingService2;
 	
+	@Autowired
 	private JwtUtil jwtUtil;
 	
 	private Long memberIdFrom(String authHeader) {

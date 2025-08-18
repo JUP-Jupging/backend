@@ -1,5 +1,7 @@
 package com.jup.jupging.domain.report.dto;
 
+import java.sql.Date;
+
 import lombok.Data;
 
 @Data
@@ -14,5 +16,6 @@ public class ReportSummaryDto {
 	private String trailName;
 	private String trailTypeName;
 	private String isPicked;
+	private Date createdAt;
 	
 }
