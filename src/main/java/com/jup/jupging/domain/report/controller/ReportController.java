@@ -1,5 +1,6 @@
 package com.jup.jupging.domain.report.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
@@ -10,12 +11,15 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jup.jupging.domain.report.dto.ReportReq;
 import com.jup.jupging.domain.report.dto.ReportSummaryDto;
 import com.jup.jupging.domain.report.service.IReportService;
 import com.jup.jupging.global.common.oauth2.JwtUtil;
+import com.jup.jupging.global.common.s3.service.S3Uploader;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +30,7 @@ public class ReportController {
 	
 	private final IReportService reportService;
     private final JwtUtil jwtUtil;
+    private final S3Uploader s3Uploader;
 
     private Long memberIdFrom(String authHeader) {
         String token = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
@@ -36,10 +41,13 @@ public class ReportController {
     }
 
     @PostMapping("/reports")
-    public ResponseEntity<?> createReport(@RequestHeader(value = "Authorization", required = false) String authHeader,
-                                          @RequestBody ReportReq req) {
+    public ResponseEntity<?> createReport(@RequestParam("image") MultipartFile multipartFile, 
+    									  @RequestHeader(value = "Authorization", required = false) String authHeader,
+                                          @RequestBody ReportReq req) throws IOException {
         try {
             Long memberId = memberIdFrom(authHeader);     // ← 토큰에서 memberId 추출
+            String imageUrl = s3Uploader.upload(multipartFile, "static");
+            req.setImageUrl(imageUrl);
             reportService.insertReport(req, memberId);    // ← 서비스가 DB에 삽입
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException e) {
