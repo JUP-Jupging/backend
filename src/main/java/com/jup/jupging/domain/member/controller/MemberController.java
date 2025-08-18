@@ -17,11 +17,13 @@ import com.jup.jupging.global.common.oauth2.JwtUtil;
 
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
 @Tag(name = "회원 관리")
+@Slf4j
 public class MemberController {
 	
 	 private final IMemberService memberService;
@@ -39,7 +41,7 @@ public class MemberController {
 	 @GetMapping("/me")
 	 public ResponseEntity<?> getMe(@RequestHeader("Authorization") String authHeader) {
 		 Long memberId = memberIdFrom(authHeader);
-		 System.out.println("MemberController - "+ memberId);
+		 log.info("MemberController - "+ memberId);
 		 MemberDto me = memberService.getById(memberId);
 		 if (me == null) return ResponseEntity.status(404).body("회원 정보를 찾을 수 없음");
 		 return ResponseEntity.ok(me);
