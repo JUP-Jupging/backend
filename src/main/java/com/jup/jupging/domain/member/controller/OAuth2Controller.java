@@ -26,9 +26,11 @@ import com.jup.jupging.global.common.oauth2.JwtUtil;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequiredArgsConstructor
+@Slf4j
 public class OAuth2Controller {
 	
 	private final MemberMapper memberMapper;
@@ -92,9 +94,9 @@ public class OAuth2Controller {
 //                "https://kauth.kakao.com/oauth/token", request, KakaoTokenResponse.class);
 
 //    	String kakaoAccessToken = response.getBody().getAccess_token();
-    	System.out.println("authHeader : " + authHeader);
+    	log.info("authHeader : " + authHeader);
     	String accessToken = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
-    	System.out.println("accessToken : " + accessToken);
+    	log.info("accessToken : " + accessToken);
     	String kakaoAccessToken = accessToken;
     	
     	HttpHeaders headers2 = new HttpHeaders();
