@@ -3,16 +3,21 @@ package com.jup.jupging.global.common.s3.controller;
 import java.io.IOException;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jup.jupging.domain.member.service.IMemberService;
+import com.jup.jupging.global.common.oauth2.JwtUtil;
 import com.jup.jupging.global.common.s3.service.S3Uploader;
 
 import lombok.RequiredArgsConstructor;
@@ -23,9 +28,19 @@ import lombok.RequiredArgsConstructor;
 public class ImageUploadController {
 
 	private final S3Uploader s3Uploader;
+	private final IMemberService memberService;
+	private final JwtUtil jwtUtil;
 	
-	@PostMapping("/images")
-	public String upload(@RequestParam("images") MultipartFile multipartFile) throws IOException {
+	private Long memberIdFrom(String authHeader) {
+		 String token = (authHeader != null && authHeader.startsWith("Bearer ")) ? authHeader.substring(7) : null;
+		 if (!jwtUtil.validateToken(token)) {
+			 throw new IllegalArgumentException("invalid token");
+		 }
+		 return jwtUtil.getMemberId(token);
+	 }
+
+	@PostMapping(value = "/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public String upload(@RequestPart("image") MultipartFile multipartFile) throws IOException {
 		return s3Uploader.upload(multipartFile, "static");
 	}
 	
@@ -35,12 +50,15 @@ public class ImageUploadController {
 		return "good";
 	}
 	
-	@PostMapping("/profile")
-	public ResponseEntity<String> insertProfileImage(@RequestParam("image") MultipartFile multipartFile) throws IOException {
+	@PostMapping(value = "/profile", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<String> insertProfileImage(@RequestHeader(value = "Authorization", required = false) String authHeader,
+			@RequestPart("image") MultipartFile multipartFile) throws IOException {
 		String imageUrl = s3Uploader.upload(multipartFile, "static");
+		Long memberId = memberIdFrom(authHeader);
 		if (imageUrl == null) {
 			return ResponseEntity.notFound().build(); 
 		}
+		memberService.updateProfileImageKey(memberId, imageUrl);
 		return ResponseEntity.ok(imageUrl);
 	}
 	
