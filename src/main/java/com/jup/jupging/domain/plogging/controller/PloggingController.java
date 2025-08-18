@@ -86,7 +86,7 @@ public class PloggingController {
 	@Autowired
 	private JwtUtil jwtUtil;
 	
-	private Long memberIdFrom(String authHeader) {
+	private Long memberIdFrom(@RequestHeader(value = "Authorization", required = false) String authHeader) {
         String token = (authHeader != null && authHeader.startsWith("Bearer "))
                 ? authHeader.substring(7) : null;
         if (token == null || !jwtUtil.validateToken(token)) {
@@ -95,7 +95,7 @@ public class PloggingController {
         return jwtUtil.getMemberId(token); // subject를 Long으로 반환
     }
 	
-	@GetMapping("/plogging/me")
+	@GetMapping("/me")
 	public ResponseEntity<?> myReports(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 
 		Long memberId = this.memberIdFrom(authHeader);
