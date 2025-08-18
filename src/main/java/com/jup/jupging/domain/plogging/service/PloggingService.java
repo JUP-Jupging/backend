@@ -23,7 +23,8 @@ public class PloggingService implements IPloggingService{
     private final TrailRepository trailRepository;
     private final PloggingRepository ploggingRepository;
     private final PloggingTrashRepository ploggingTrashRepository;
-    @Autowired                                                                                                                                                                              PloggingMapper ploggingMapper;
+    @Autowired                                                                                                                                                                              
+    PloggingMapper ploggingMapper;
 
     public PloggingService(MemberRepository memberRepository, TrailRepository trailRepository, PloggingRepository ploggingRepository, PloggingTrashRepository ploggingTrashRepository) {
         this.memberRepository = memberRepository;
@@ -31,7 +32,8 @@ public class PloggingService implements IPloggingService{
         this.ploggingRepository = ploggingRepository;
         this.ploggingTrashRepository = ploggingTrashRepository;
     }
-    @Override                                                                                                                                                                               public List<PloggingDto> findMyPlogging(Long memberId) {                                                                                                                        
+    @Override                                                                                                                                                                               
+    public List<PloggingDto> findMyPlogging(Long memberId) {                                                                                                                        
                     return ploggingMapper.findMyPlogging(memberId);                                                                                                                                 }
 
 
