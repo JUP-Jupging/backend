@@ -75,7 +75,7 @@ public class OAuth2Controller {
     
     @PostMapping("/auth/kakao/native")
 //    public ResponseEntity<?> login(@RequestParam("code") String code) {
-    public ResponseEntity<?> login(@RequestParam("accessToken") String accessToken) {
+    public ResponseEntity<?> login(@RequestHeader("Authorization") String accessToken) {
     	
 //    	HttpHeaders headers = new HttpHeaders();
 //        headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
