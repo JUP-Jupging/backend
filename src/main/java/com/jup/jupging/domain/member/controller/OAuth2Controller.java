@@ -1,6 +1,5 @@
 package com.jup.jupging.domain.member.controller;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -11,12 +10,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -27,13 +24,11 @@ import com.jup.jupging.domain.member.dto.MemberDto;
 import com.jup.jupging.domain.member.mapper.MemberMapper;
 import com.jup.jupging.global.common.oauth2.JwtUtil;
 
-import io.swagger.v3.oas.annotations.Hidden;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@Hidden
 public class OAuth2Controller {
 	
 	private final MemberMapper memberMapper;
@@ -55,28 +50,28 @@ public class OAuth2Controller {
      * @param provider 소셜 로그인 종류 (kakao, google)
      * @return provider에 맞는 소셜 로그인 URL
      */
-    @GetMapping("/api/v1/auth/{provider}")
-    public Map<String, String> getSocialLoginUrl(@PathVariable("provider") String provider) {
-        // 1. application.yml에 등록된 OAuth2 클라이언트 정보를 가져온다.
-        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(provider.toLowerCase());
-
-        // 2. 해당 클라이언트의 인증 URL을 가져온다.
-        String authorizationUri = clientRegistration.getProviderDetails().getAuthorizationUri();
-        String clientId = clientRegistration.getClientId();
-        String redirectUri = clientRegistration.getRedirectUri();
-//        String scope = String.join(",", clientRegistration.getScopes());
-
-        // 3. 동적으로 URL을 생성한다. (state, response_type 등은 프레임워크가 자동으로 처리하는 부분을 수동으로 구성)
-        String socialLoginUrl = authorizationUri +
-                "?client_id=" + clientId +
-                "&redirect_uri=" + redirectUri +
-                "&response_type=code&prompt=login";
-
-        Map<String, String> urlMap = new HashMap<>();
-        urlMap.put("url", socialLoginUrl);
-        
-        return urlMap;
-    }
+//    @GetMapping("/api/v1/auth/{provider}")
+//    public Map<String, String> getSocialLoginUrl(@PathVariable("provider") String provider) {
+//        // 1. application.yml에 등록된 OAuth2 클라이언트 정보를 가져온다.
+//        ClientRegistration clientRegistration = clientRegistrationRepository.findByRegistrationId(provider.toLowerCase());
+//
+//        // 2. 해당 클라이언트의 인증 URL을 가져온다.
+//        String authorizationUri = clientRegistration.getProviderDetails().getAuthorizationUri();
+//        String clientId = clientRegistration.getClientId();
+//        String redirectUri = clientRegistration.getRedirectUri();
+////        String scope = String.join(",", clientRegistration.getScopes());
+//
+//        // 3. 동적으로 URL을 생성한다. (state, response_type 등은 프레임워크가 자동으로 처리하는 부분을 수동으로 구성)
+//        String socialLoginUrl = authorizationUri +
+//                "?client_id=" + clientId +
+//                "&redirect_uri=" + redirectUri +
+//                "&response_type=code&prompt=login";
+//
+//        Map<String, String> urlMap = new HashMap<>();
+//        urlMap.put("url", socialLoginUrl);
+//        
+//        return urlMap;
+//    }
     
     @GetMapping("/login/oauth2/code/kakao")
     public ResponseEntity<?> login(@RequestParam("code") String code) {
