@@ -2,11 +2,11 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jup.jupging.domain.plogging.mapper.PloggingMapper">
 
-	<select id="findMyPlogging" resultType="com.jup.jupging.domain.plogging.dto.PloggingDto" parameterType="long">
+	<select id="findMyPlogging" resultType="com.jup.jupging.domain.plogging.dto.MyPloggingDto" parameterType="long">
 		SELECT  p.PLOGGING_ID AS ploggingId,
 			    p.TRAIL_ID AS trailId,
 				p.MEMBER_ID AS memberId,
-				p.PLOGGING_DATE AS ploggingDate2,
+				p.PLOGGING_DATE AS ploggingDate,
 				p.PLOGGING_TIME AS ploggingTime,
 				p.DISTANCE AS distance,
 				NVL(p.START_LAT, 0) AS startLat,

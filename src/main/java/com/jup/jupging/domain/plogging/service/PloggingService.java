@@ -1,26 +1,27 @@
 package com.jup.jupging.domain.plogging.service;
 
+import java.io.IOException;
+import java.time.LocalDate;
 import java.util.List;
-import com.jup.jupging.domain.plogging.entity.Plogging;
-import com.jup.jupging.domain.plogging.entity.PloggingTrash;
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import com.jup.jupging.domain.plogging.dto.MyPloggingDto;
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
 import com.jup.jupging.domain.plogging.dto.PloggingInsertRequestDto;
-import com.jup.jupging.domain.plogging.mapper.PloggingMapper;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
+import com.jup.jupging.domain.plogging.entity.Plogging;
+import com.jup.jupging.domain.plogging.entity.PloggingTrash;
+import com.jup.jupging.domain.plogging.mapper.PloggingMapper;
 import com.jup.jupging.domain.plogging.repository.MemberRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingTrashRepository;
 import com.jup.jupging.domain.trail.repository.TrailRepository;
 import com.jup.jupging.global.common.s3.service.S3Uploader;
-
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.Optional;
 
 @Service
 public class PloggingService implements IPloggingService{
@@ -40,7 +41,7 @@ public class PloggingService implements IPloggingService{
         this.ploggingTrashRepository = ploggingTrashRepository;
     }
     @Override                                                                                                                                                                               
-    public List<PloggingDto> findMyPlogging(Long memberId) {    
+    public List<MyPloggingDto> findMyPlogging(Long memberId) {    
     	return ploggingMapper.findMyPlogging(memberId);  
     }
     // 플로깅 중일 때 쓰레기 줍기 요청 시

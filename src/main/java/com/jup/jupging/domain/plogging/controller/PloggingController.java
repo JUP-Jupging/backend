@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jup.jupging.domain.plogging.dto.MyPloggingDto;
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
 import com.jup.jupging.domain.plogging.dto.PloggingInsertRequestDto;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
@@ -121,7 +122,7 @@ public class PloggingController {
         if (memberId == null) {
             return ResponseEntity.status(401).body("unauthorized");
         }
-        List<PloggingDto> list = ploggingService2.findMyPlogging(memberId);
+        List<MyPloggingDto> list = ploggingService2.findMyPlogging(memberId);
         return ResponseEntity.ok(list);
     }
 }
