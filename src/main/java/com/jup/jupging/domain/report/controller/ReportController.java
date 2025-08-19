@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.jup.jupging.domain.report.dto.ReportDetailDto;
@@ -40,7 +41,7 @@ public class ReportController {
 
     @PostMapping("/reports")
     public ResponseEntity<?> createReport(@RequestHeader(value = "Authorization", required = false) String authHeader,
-                                          ReportReq req) throws IOException {
+                                          @RequestParam("req") ReportReq req) {
         try {
             Long memberId = memberIdFrom(authHeader);     // ← 토큰에서 memberId 추출
             reportService.insertReport(req, memberId);    // ← 서비스가 DB에 삽입
