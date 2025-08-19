@@ -51,7 +51,8 @@ public class ReportController {
         	String imageUrl = s3Uploader.upload(multipartFile, "static");
             Long memberId = memberIdFrom(authHeader);     // ← 토큰에서 memberId 추출
             req.setImageUrl(imageUrl);
-            reportService.insertReport(req, memberId);    // ← 서비스가 DB에 삽입
+            req.setMemberId(memberId);
+            reportService.insertReport(req);    // ← 서비스가 DB에 삽입
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException e) {
             return ResponseEntity.notFound().build();

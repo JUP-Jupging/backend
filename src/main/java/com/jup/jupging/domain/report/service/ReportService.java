@@ -20,36 +20,8 @@ public class ReportService implements IReportService{
 	private ReportMapper reportMapper; 
 
 	@Override
-	public int insertReport(ReportReq req, Long memberId) {
-		
-		Map<String,Integer> categoryMap;
-		if(req.getCategoryCounts() != null) {
-			categoryMap = req.getCategoryCounts();
-		}else {
-			categoryMap = Map.of();
-		}
-	
-	//DTO를 받아 엔티티로 바꾸기
-
-		Report r = new Report();
-		r.setMemberId(memberId);
-		r.setTrailId(req.getTrailId());
-		r.setTitle(req.getTitle());
-		r.setLat(req.getLat());
-		r.setLng(req.getLng());
-		r.setImageUrl(req.getImageUrl());
-		r.setIsPicked(req.getIsPicked());
-		
-		r.setPaper(categoryMap.getOrDefault("paper", 0));
-		r.setCan(categoryMap.getOrDefault("can", 0));
-		r.setPlastic(categoryMap.getOrDefault("plastic", 0));
-		r.setVinyl(categoryMap.getOrDefault("vinyl", 0));
-		r.setGlass(categoryMap.getOrDefault("glass", 0));
-		r.setStyro(categoryMap.getOrDefault("styro", 0));
-		r.setBattery(categoryMap.getOrDefault("battery", 0));
-		
-	
-		return reportMapper.insertReport(r);
+	public int insertReport(ReportReq req) {
+		return reportMapper.insertReport(req);
 	}
 	
 	@Override

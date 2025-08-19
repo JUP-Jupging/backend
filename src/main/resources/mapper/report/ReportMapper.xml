@@ -3,13 +3,13 @@
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jup.jupging.domain.report.mapper.ReportMapper">
-  <insert id="insertReport" parameterType="com.jup.jupging.domain.report.entity.Report">
+  <insert id="insertReport" parameterType="com.jup.jupging.domain.report.dto.ReportReq">
     INSERT INTO REPORT
-      (MEMBER_ID, TRAIL_ID, TITLE, LAT, LNG, IMAGE_URL,
+      (report_id, MEMBER_ID, TRAIL_ID, TITLE, LAT, LNG, IMAGE_URL,
        PAPER, CAN, PLASTIC, VINYL, GLASS, STYRO, BATTERY, IS_PICKED, CREATED_AT)
     VALUES
-      (#{memberId}, #{trailId}, #{title}, #{lat}, #{lng}, #{imageUrl},
-       #{paper}, #{can}, #{plastic}, #{vinyl}, #{glass}, #{styro}, #{battery}, 'N', SYSDATE)
+      (SEQ_REPORT_ID.NEXTVAL, #{memberId}, #{trailId}, #{title}, #{lat}, #{lng}, #{imageUrl},
+       NVL(#{paper}, 0), NVL(#{can}, 0), NVL(#{plastic}, 0), NVL(#{vinyl}, 0), NVL(#{glass}, 0), NVL(#{styro}, 0), NVL(#{battery}, 0), 'N', SYSDATE)
   </insert>
   
   <select id="findMyReports" resultType="com.jup.jupging.domain.report.dto.ReportSummaryDto">

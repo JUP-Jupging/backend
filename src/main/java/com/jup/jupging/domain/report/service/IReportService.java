@@ -8,7 +8,7 @@ import com.jup.jupging.domain.report.dto.ReportSummaryDto;
 
 
 public interface IReportService {
-	int insertReport(ReportReq req, Long memberId);
+	int insertReport(ReportReq req);
 
 	List<ReportSummaryDto> findMyReports(Long memberId);
 	
