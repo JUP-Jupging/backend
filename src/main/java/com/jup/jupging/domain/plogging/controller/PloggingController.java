@@ -1,5 +1,6 @@
 package com.jup.jupging.domain.plogging.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,38 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
+import com.jup.jupging.domain.plogging.dto.PloggingInsertRequestDto;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
 import com.jup.jupging.domain.plogging.service.IPloggingService;
 import com.jup.jupging.domain.plogging.service.PloggingService;
 import com.jup.jupging.global.common.oauth2.JwtUtil;
+import com.jup.jupging.global.common.s3.service.S3Uploader;
 
 @RestController
-@RequestMapping(value = "/plogging", produces = "application/json; charset=utf8")
+@RequestMapping("/plogging")
 public class PloggingController {
     private final PloggingService ploggingService;
     public PloggingController(PloggingService ploggingService) {
         this.ploggingService = ploggingService;
+    }
+    @Autowired
+    IPloggingService ploggingService2;
+    @Autowired
+    private JwtUtil jwtUtil;
+    @Autowired
+    S3Uploader s3Uploader;
+    
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> insertPlogging(@RequestHeader(value = "Authorization", required = false) String authHeader, 
+    		@RequestPart(value = "image", required = false) MultipartFile multipartFile,
+    		PloggingInsertRequestDto ploggingInsertRequestDto) throws IOException {
+    	String imageUrl = s3Uploader.upload(multipartFile, "static");
+    	Long memberId = this.memberIdFrom(authHeader);
+    	ploggingInsertRequestDto.setMemberId(memberId);
+    	ploggingInsertRequestDto.setImageUrl(imageUrl);
+    	ploggingService2.insertPlogging(ploggingInsertRequestDto);
+    	
+    	return ResponseEntity.ok().build();
     }
 
     /**
@@ -52,7 +74,7 @@ public class PloggingController {
      * @param plogging
      * @return
      */
-    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/record")
     public ResponseEntity<?> insertPlogging(@RequestBody PloggingRequestDto plogging, 
     		@RequestPart(value = "image", required = false) MultipartFile multipartFile){
         try{
@@ -80,12 +102,6 @@ public class PloggingController {
         return ResponseEntity.ok().body(ploggingService.getPloggingCountByTrail(trailId));
     }
 
-	@Autowired
-	IPloggingService ploggingService2;
-	
-	@Autowired
-	private JwtUtil jwtUtil;
-	
 	private Long memberIdFrom(@RequestHeader(value = "Authorization", required = false) String authHeader) {
         String token = (authHeader != null && authHeader.startsWith("Bearer "))
                 ? authHeader.substring(7) : null;
