@@ -11,7 +11,7 @@
 				p.DISTANCE AS distance,
 				NVL(p.START_LAT, 0) AS startLat,
 				NVL(p.START_LNG, 0) AS startLng,
-				p.IMAGE_URL AS image,
+				p.IMAGE_URL AS imageUrl,
 				t.TRAIL_NAME AS trailName,
 				t.TRAIL_TYPE_NAME AS trailTypeName
 		FROM PLOGGING p
