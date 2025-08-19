@@ -3,6 +3,7 @@ package com.jup.jupging.domain.plogging.controller;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -10,7 +11,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
@@ -49,13 +52,11 @@ public class PloggingController {
      * @param plogging
      * @return
      */
-    @PostMapping
-    public ResponseEntity<?> insertPlogging(@RequestBody PloggingRequestDto plogging){
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<?> insertPlogging(@RequestBody PloggingRequestDto plogging, 
+    		@RequestPart(value = "image", required = false) MultipartFile multipartFile){
         try{
-            System.out.println("============"+plogging.isStart());
-            System.out.println(plogging.getMemberId());
-
-            ploggingService.insertPlopping(plogging);
+            ploggingService.insertPlopping(plogging, multipartFile);
             return ResponseEntity.ok().body(plogging.isStart() ? "기록을 시작합니다." : "기록이 완료되었어요.");
         } catch (Exception e){
             e.printStackTrace();
@@ -63,13 +64,12 @@ public class PloggingController {
         }
     }
 
-
     @PostMapping("/{ploggingId}/reports/{reportId}/pick")
     public String insertPickedTrash(@PathVariable Long ploggingId, @PathVariable Long reportId){
-
         String result = ploggingService.insertPickedTrash(ploggingId, reportId);
         return result;
     }
+    
     @GetMapping("/{ploggingId}/members/{memberId}")
     public ResponseEntity<PloggingDto> getPlopping(@PathVariable Long ploggingId, @PathVariable Long memberId){
         return ResponseEntity.ok().body(ploggingService.getPlogging(ploggingId, memberId));
@@ -97,12 +97,10 @@ public class PloggingController {
 	
 	@GetMapping("/me")
 	public ResponseEntity<?> myReports(@RequestHeader(value = "Authorization", required = false) String authHeader) {
-
 		Long memberId = this.memberIdFrom(authHeader);
         if (memberId == null) {
             return ResponseEntity.status(401).body("unauthorized");
         }
-
         List<PloggingDto> list = ploggingService2.findMyPlogging(memberId);
         return ResponseEntity.ok(list);
     }
