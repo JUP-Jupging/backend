@@ -29,7 +29,7 @@ public class PloggingDto {
     private String cityName;
     private String image;
 
-   private String trailId;
+   private Long trailId;
    private String trailTypeName;
 
 
