@@ -14,7 +14,7 @@ public class MyPloggingDto {
 	private Double distance;
 	private Double startLat;
 	private Double startLNG;
-	private String ImageUrl;
+	private String imageUrl;
 	private String trailName;
 	private String trailTypeName;
 }
