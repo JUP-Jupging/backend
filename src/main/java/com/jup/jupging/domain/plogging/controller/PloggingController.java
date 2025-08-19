@@ -41,13 +41,17 @@ public class PloggingController {
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Void> insertPlogging(@RequestHeader(value = "Authorization", required = false) String authHeader, 
     		@RequestPart(value = "image", required = false) MultipartFile multipartFile,
-    		PloggingInsertRequestDto ploggingInsertRequestDto) throws IOException {
-    	String imageUrl = s3Uploader.upload(multipartFile, "static");
-    	Long memberId = this.memberIdFrom(authHeader);
-    	ploggingInsertRequestDto.setMemberId(memberId);
-    	ploggingInsertRequestDto.setImageUrl(imageUrl);
-    	ploggingService2.insertPlogging(ploggingInsertRequestDto);
-    	
+    		PloggingInsertRequestDto ploggingInsertRequestDto) {
+		try {
+			String imageUrl = s3Uploader.upload(multipartFile, "static");
+			Long memberId = this.memberIdFrom(authHeader);
+			ploggingInsertRequestDto.setMemberId(memberId);
+			ploggingInsertRequestDto.setImageUrl(imageUrl);
+			ploggingService2.insertPlogging(ploggingInsertRequestDto);
+		} catch (IOException e) {
+			ResponseEntity.notFound().build();
+			e.printStackTrace();
+		}
     	return ResponseEntity.ok().build();
     }
 
