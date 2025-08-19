@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.jup.jupging.domain.report.dto.ReportDetailDto;
 import com.jup.jupging.domain.report.dto.ReportReq;
 import com.jup.jupging.domain.report.dto.ReportSummaryDto;
 import com.jup.jupging.domain.report.service.IReportService;
@@ -95,4 +96,12 @@ public class ReportController {
                 : ResponseEntity.status(404).body("report not found");
     }
     
+    @GetMapping("/reports/{trailId}")
+    public ResponseEntity<?> getReportsByTrailId(@PathVariable("trailId") Long trailId) {
+    	List<ReportDetailDto> reportList = reportService.getReportsByTrailId(trailId);
+    	if (reportList == null) {
+    		return ResponseEntity.notFound().build();
+    	}
+    	return ResponseEntity.ok(reportList);
+    }
 }

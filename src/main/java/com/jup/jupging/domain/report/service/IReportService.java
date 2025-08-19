@@ -17,4 +17,6 @@ public interface IReportService {
 	ReportDetailDto findReportDetail(Long reportId);
 
 	boolean pickReport(Long reportId);
+
+	List<ReportDetailDto> getReportsByTrailId(Long trailId);
 }

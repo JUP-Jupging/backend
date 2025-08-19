@@ -71,4 +71,9 @@ public class ReportService implements IReportService{
 	public boolean pickReport(Long reportId) {
 		return reportMapper.pickReport(reportId) > 0;
 	}
+
+	@Override
+	public List<ReportDetailDto> getReportsByTrailId(Long trailId) {
+		return reportMapper.getReportsByTrailId(trailId);
+	}
 }
