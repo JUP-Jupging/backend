@@ -86,9 +86,29 @@
   	UPDATE REPORT
   		SET IS_PICKED = 'Y'
   	WHERE REPORT_ID = #{reportId}
-  
-  	
-  
   </update>
+  
+	<select id="getReportsByTrailId" parameterType="int" resultType="com.jup.jupging.domain.report.dto.ReportDetailDto">
+		SELECT
+		    report_id AS reportId,
+		    member_id AS memberId,
+		    trail_id AS trailId,
+		    lat,
+		    lng,
+		    image_url AS imageUrl,
+		    paper,
+		    can,
+		    plastic,
+		    vinyl,
+		    glass,
+		    styro,
+		    battery,
+		    created_at AS createdAt,
+		    title,
+		    is_picked AS isPicked,
+		    plogging_id AS ploggingId
+		FROM REPORT 
+		WHERE trail_id=#{trailId};
+	</select>
   
 </mapper>

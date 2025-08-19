@@ -16,5 +16,6 @@ public interface ReportMapper {
 	ReportDetailDto findMyReportDetail(@Param("memberId") Long memberId, @Param("reportId") Long reportId);
 	ReportDetailDto findReportDetail(@Param("reportId") Long reportId);
 	int pickReport(Long reportId);
+	List<ReportDetailDto> getReportsByTrailId(Long trailId);
 	
 }
