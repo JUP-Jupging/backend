@@ -9,8 +9,8 @@
 				p.PLOGGING_DATE AS ploggingDate2,
 				p.PLOGGING_TIME AS ploggingTime,
 				p.DISTANCE AS distance,
-				p.START_LAT AS startLat,
-				p.START_LNG AS startLng,
+				NVL(p.START_LAT, 0) AS startLat,
+				NVL(p.START_LNG, 0) AS startLng,
 				p.IMAGE_URL AS image,
 				t.TRAIL_NAME AS trailName,
 				t.TRAIL_TYPE_NAME AS trailTypeName
