@@ -49,8 +49,8 @@ public class PloggingController {
 			ploggingInsertRequestDto.setImageUrl(imageUrl);
 			ploggingService2.insertPlogging(ploggingInsertRequestDto);
 		} catch (IOException e) {
-			ResponseEntity.notFound().build();
 			e.printStackTrace();
+			return ResponseEntity.notFound().build();
 		}
     	return ResponseEntity.ok().build();
     }
