@@ -96,7 +96,7 @@ public class ReportController {
                 : ResponseEntity.status(404).body("report not found");
     }
     
-    @GetMapping("/reports/{trailId}")
+    @GetMapping("/reports/trails/{trailId}")
     public ResponseEntity<?> getReportsByTrailId(@PathVariable("trailId") Long trailId) {
     	List<ReportDetailDto> reportList = reportService.getReportsByTrailId(trailId);
     	if (reportList == null) {
