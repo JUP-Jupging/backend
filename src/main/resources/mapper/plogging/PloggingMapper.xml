@@ -6,7 +6,7 @@
 		SELECT  p.PLOGGING_ID AS ploggingId,
 			    p.TRAIL_ID AS trailId,
 				p.MEMBER_ID AS memberId,
-				p.PLOGGING_DATE AS ploggingDate,
+				p.PLOGGING_DATE AS ploggingDate2,
 				p.PLOGGING_TIME AS ploggingTime,
 				p.DISTANCE AS distance,
 				p.START_LAT AS startLat,

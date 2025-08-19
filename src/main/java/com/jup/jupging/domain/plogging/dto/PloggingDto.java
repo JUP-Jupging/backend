@@ -18,6 +18,7 @@ public class PloggingDto {
     private Double endLat;
     private Double endLng;
     private LocalDate ploggingDate;
+    private Date ploggingDate2;
     private String ploggingTime;
     private Double distance;
     private String difficulty;
