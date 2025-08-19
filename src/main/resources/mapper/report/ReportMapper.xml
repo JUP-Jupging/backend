@@ -108,7 +108,7 @@
 		    is_picked AS isPicked,
 		    plogging_id AS ploggingId
 		FROM REPORT 
-		WHERE trail_id=#{trailId};
+		WHERE trail_id=#{trailId}
 	</select>
   
 </mapper>
