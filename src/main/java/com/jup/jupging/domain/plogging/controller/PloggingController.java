@@ -97,8 +97,10 @@ public class PloggingController {
         return result;
     }
     
-    @GetMapping("/{ploggingId}/members/{memberId}")
-    public ResponseEntity<PloggingDto> getPlopping(@PathVariable Long ploggingId, @PathVariable Long memberId){
+    @GetMapping("/{ploggingId}/members")
+    public ResponseEntity<PloggingDto> getPlopping(@RequestHeader(value = "Authorization", required = false) String authHeader,
+    		@PathVariable Long ploggingId){
+    	Long memberId = this.memberIdFrom(authHeader);
         return ResponseEntity.ok().body(ploggingService.getPlogging(ploggingId, memberId));
     }
 
