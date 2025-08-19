@@ -13,7 +13,7 @@
     APP_NICKNAME      AS appNickname,
     PROVIDER,
     IS_DELETED        AS isDeleted,
-    PROFILE_IMAGE_KEY AS profileImageUrl,   <!-- DTO가 url 필드명이라 alias로 맞춤 -->
+    PROFILE_IMAGE_URL AS profileImageUrl,   <!-- DTO가 url 필드명이라 alias로 맞춤 -->
     ACTIVITY_REGION   AS activityRegion,
     CREATED_AT        AS createdAt
   </sql>
