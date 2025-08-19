@@ -64,14 +64,7 @@ public class TrailController {
     // return : 근처 산책로 목록 List<TrailLocationDto>
     @GetMapping("/nearby")
     public ResponseEntity<?> findTrailsNearby(@RequestParam double userLat, @RequestParam double userLong){
-
         List<TrailWithDistanceDto> trailWithDistances = trailService.findTrailsNearby(userLat, userLong);
-
-//        System.out.println("검색 결과 개수: " + trailWithDistances.size());
-//        for (TrailWithDistanceDto trail : trailWithDistances) {
-//            System.out.println(trail);
-//        }
-
         return ResponseEntity.ok(trailWithDistances);
     }
 

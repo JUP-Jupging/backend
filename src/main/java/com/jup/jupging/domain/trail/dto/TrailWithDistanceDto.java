@@ -25,5 +25,6 @@ public class TrailWithDistanceDto {
     private double spotLongitude;         // 경도
     private int reportCount;              // 제보 횟수
     private double distanceToUser;      // + 사용자 위치 간 거리, 조회
-
+    private String img1;
+    private String img2;
 }
