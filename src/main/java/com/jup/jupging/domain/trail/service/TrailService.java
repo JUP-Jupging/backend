@@ -154,6 +154,8 @@ public class TrailService {
                     dto.setSpotLongitude(((Number) r[10]).doubleValue());
                     dto.setReportCount(((Number) r[11]).intValue());
                     dto.setDistanceToUser(((Number) r[12]).doubleValue());
+                    dto.setImg1((String) r[13]);
+                    dto.setImg2((String) r[14]);
                     return dto;
                 })
                 .collect(Collectors.toList());

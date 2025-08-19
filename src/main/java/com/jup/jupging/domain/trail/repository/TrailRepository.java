@@ -31,7 +31,9 @@ public interface TrailRepository extends JpaRepository<Trail, Long>, JpaSpecific
          COS(t.spot_latitude * 3.1415926535 / 180) * COS(:userLat * 3.1415926535 / 180) *
          COS((:userLong - t.spot_longitude) * 3.1415926535 / 180) +
          SIN(t.spot_latitude * 3.1415926535 / 180) * SIN(:userLat * 3.1415926535 / 180)
-         )) AS distanceToUser
+         )) AS distanceToUser,
+         t.img1,
+         t.img2
         FROM trail t
         WHERE (6371 * ACOS(
              COS(t.spot_latitude * 3.1415926535 / 180) * COS(:userLat * 3.1415926535 / 180) *
