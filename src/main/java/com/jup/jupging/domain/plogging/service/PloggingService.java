@@ -4,6 +4,7 @@ import java.util.List;
 import com.jup.jupging.domain.plogging.entity.Plogging;
 import com.jup.jupging.domain.plogging.entity.PloggingTrash;
 import com.jup.jupging.domain.plogging.dto.PloggingDto;
+import com.jup.jupging.domain.plogging.dto.PloggingInsertRequestDto;
 import com.jup.jupging.domain.plogging.mapper.PloggingMapper;
 import com.jup.jupging.domain.plogging.dto.PloggingRequestDto;
 import com.jup.jupging.domain.plogging.repository.MemberRepository;
@@ -90,4 +91,17 @@ public class PloggingService implements IPloggingService{
     public Long getPloggingCountByTrail(Long trailId) {
         return ploggingRepository.countByTrail_TrailId(trailId);
     }
+	@Override
+	public void insertPlogging(PloggingInsertRequestDto ploggingInsertRequestDto) {
+		Plogging p = new Plogging(
+				memberRepository.getReferenceById(ploggingInsertRequestDto.getMemberId()), 
+				trailRepository.getReferenceById(ploggingInsertRequestDto.getTrailId()), 
+				LocalDate.now(),
+				ploggingInsertRequestDto.getPloggingTime(), 
+				ploggingInsertRequestDto.getDistance(), 
+				null, 
+				null, 
+				ploggingInsertRequestDto.getImageUrl());
+		ploggingRepository.save(p);
+	}
 }
