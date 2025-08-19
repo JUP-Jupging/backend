@@ -10,10 +10,14 @@ import com.jup.jupging.domain.plogging.repository.MemberRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingRepository;
 import com.jup.jupging.domain.plogging.repository.PloggingTrashRepository;
 import com.jup.jupging.domain.trail.repository.TrailRepository;
+import com.jup.jupging.global.common.s3.service.S3Uploader;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Optional;
 
@@ -25,6 +29,8 @@ public class PloggingService implements IPloggingService{
     private final PloggingTrashRepository ploggingTrashRepository;
     @Autowired                                                                                                                                                                              
     PloggingMapper ploggingMapper;
+    @Autowired
+    S3Uploader s3Uploader;
 
     public PloggingService(MemberRepository memberRepository, TrailRepository trailRepository, PloggingRepository ploggingRepository, PloggingTrashRepository ploggingTrashRepository) {
         this.memberRepository = memberRepository;
@@ -33,34 +39,26 @@ public class PloggingService implements IPloggingService{
         this.ploggingTrashRepository = ploggingTrashRepository;
     }
     @Override                                                                                                                                                                               
-    public List<PloggingDto> findMyPlogging(Long memberId) {                                                                                                                        
-                    return ploggingMapper.findMyPlogging(memberId);                                                                                                                                 }
-
-
+    public List<PloggingDto> findMyPlogging(Long memberId) {    
+    	return ploggingMapper.findMyPlogging(memberId);                                                                                                                                 }
     // 플로깅 중일 때 쓰레기 줍기 요청 시
     @Transactional
     public String insertPickedTrash(Long ploggingId,Long reportId){
-
-        // 제보 내역에 플로깅 ID가 null인 상태엿다가 플로깅할 때 쓰레기 줍기할 때 들어가게( 한 사람 당 플로깅(산책로) 하나만 한다고 가정 )
-        PloggingTrash trash = ploggingTrashRepository.getReferenceById(reportId);
-        System.out.println("trash = " + trash);
-        trash.setIsPicked("y");
-        trash.setPlogging(ploggingRepository.getReferenceById(ploggingId));
-
-        return "쓰레기 줍기 성공";
-
+    	// 제보 내역에 플로깅 ID가 null인 상태엿다가 플로깅할 때 쓰레기 줍기할 때 들어가게( 한 사람 당 플로깅(산책로) 하나만 한다고 가정 )
+    	PloggingTrash trash = ploggingTrashRepository.getReferenceById(reportId);
+    	trash.setIsPicked("y");
+    	trash.setPlogging(ploggingRepository.getReferenceById(ploggingId));
+    	return "쓰레기 줍기 성공";
     }
 
     @Transactional
-    public void insertPlopping(PloggingRequestDto plogging) {
-
+    public void insertPlopping(PloggingRequestDto plogging, MultipartFile multipartFile) throws IOException {
         //플로깅 시작할 때 작업임
         if(plogging.isStart()){
             Optional<Plogging> activePlogging = ploggingRepository.findActivePloggingForUpdate(plogging.getMemberId());
             if (activePlogging.isPresent()) {
                 throw new IllegalArgumentException("이미 플로깅 중입니다. 먼저 종료하고 시도해주세요.");
             }
-
             Plogging p = new Plogging(
                     memberRepository.getReferenceById(plogging.getMemberId()),
                     trailRepository.getReferenceById(plogging.getTrailId()),
@@ -72,15 +70,14 @@ public class PloggingService implements IPloggingService{
                     null
             );
             ploggingRepository.save(p);
-        }
-
-        //플로깅 끝날 때 작업
-        else {
+        } else { //플로깅 끝날 때 작업
+        	String imageUrl = s3Uploader.upload(multipartFile, "static");
             Plogging pl = ploggingRepository.findActivePloggingForUpdate(plogging.getMemberId())
                     .orElseThrow(() -> new IllegalArgumentException("진행 중인 플로깅이 없습니다."));
             // 나머지
             pl.setDistance(plogging.getDistance());
             pl.setPloggingTime(plogging.getPloggingTime());
+            pl.setImageUrl(imageUrl);
             ploggingRepository.save(pl);
         }
     }
