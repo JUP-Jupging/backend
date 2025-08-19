@@ -4,14 +4,17 @@ import java.io.IOException;
 import java.util.List;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.jup.jupging.domain.report.dto.ReportDetailDto;
 import com.jup.jupging.domain.report.dto.ReportReq;
@@ -25,6 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/reports")
 public class ReportController {
 	
 	private final IReportService reportService;
@@ -39,19 +43,25 @@ public class ReportController {
         return jwtUtil.getMemberId(token); // subject를 Long으로 반환
     }
 
-    @PostMapping("/reports")
-    public ResponseEntity<?> createReport(@RequestHeader(value = "Authorization", required = false) String authHeader,
-                                          @RequestParam("req") ReportReq req) {
+    @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Void> createReport(@RequestHeader(value = "Authorization", required = false) String authHeader,
+    		@RequestPart(value = "image", required = false) MultipartFile multipartFile,
+            ReportReq req) {
         try {
+        	String imageUrl = s3Uploader.upload(multipartFile, "static");
             Long memberId = memberIdFrom(authHeader);     // ← 토큰에서 memberId 추출
+            req.setImageUrl(imageUrl);
             reportService.insertReport(req, memberId);    // ← 서비스가 DB에 삽입
             return ResponseEntity.status(HttpStatus.CREATED).build();
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("invalid token");
-        }
+            return ResponseEntity.notFound().build();
+        } catch (IOException e) {
+        	e.printStackTrace();
+			return ResponseEntity.notFound().build();
+		}
     }
     
-    @GetMapping("/reports/{reportId}")
+    @GetMapping("/{reportId}")
     public ResponseEntity<?> detail(@PathVariable("reportId") Long reportId) {
         var dto = reportService.findReportDetail(reportId);
         return (dto == null)
@@ -61,7 +71,7 @@ public class ReportController {
     
     
     
-    @GetMapping("/reports/me")
+    @GetMapping("/me")
     public ResponseEntity<?> myReports(@RequestHeader(value = "Authorization", required = false) String authHeader) {
 
     	Long memberId = memberIdFrom(authHeader);
@@ -73,7 +83,7 @@ public class ReportController {
         return ResponseEntity.ok(list);
     }
     
-    @GetMapping("/reports/me/{reportId}")
+    @GetMapping("/me/{reportId}")
     public ResponseEntity<?> myReportDetail(@RequestHeader(value = "Authorization", required = false) String authHeader
     		, @PathVariable("reportId") Long reportId){
     	Long memberId = memberIdFrom(authHeader);
@@ -83,14 +93,14 @@ public class ReportController {
     
     
     
-    @PutMapping("/reports/{reportId}")
+    @PutMapping("/{reportId}")
     public ResponseEntity<?> pick(@PathVariable("reportId") Long reportId) {
         return reportService.pickReport(reportId)
                 ? ResponseEntity.ok("picked")
                 : ResponseEntity.status(404).body("report not found");
     }
     
-    @GetMapping("/reports/trails/{trailId}")
+    @GetMapping("/trails/{trailId}")
     public ResponseEntity<?> getReportsByTrailId(@PathVariable("trailId") Long trailId) {
     	List<ReportDetailDto> reportList = reportService.getReportsByTrailId(trailId);
     	if (reportList == null) {

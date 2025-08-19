@@ -12,6 +12,7 @@ import java.util.List;
 @Data
 public class PloggingDto {
 
+	private Long ploggingId;
     private Double startLat;
     private Double startLng;
     private Double endLat;
@@ -27,6 +28,7 @@ public class PloggingDto {
     private String cityName;
     private String image;
 
+   private String trailId;
    private String trailTypeName;
 
 

@@ -41,7 +41,8 @@ public class PloggingService implements IPloggingService{
     }
     @Override                                                                                                                                                                               
     public List<PloggingDto> findMyPlogging(Long memberId) {    
-    	return ploggingMapper.findMyPlogging(memberId);                                                                                                                                 }
+    	return ploggingMapper.findMyPlogging(memberId);  
+    }
     // 플로깅 중일 때 쓰레기 줍기 요청 시
     @Transactional
     public String insertPickedTrash(Long ploggingId,Long reportId){
