@@ -45,7 +45,7 @@ public class ReportController {
     @PostMapping(value = "/reports", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createReport(@RequestPart("image") MultipartFile multipartFile, 
     									  @RequestHeader(value = "Authorization", required = false) String authHeader,
-                                          @RequestBody ReportReq req) throws IOException {
+                                          @RequestPart("req") ReportReq req) throws IOException {
         try {
             Long memberId = memberIdFrom(authHeader);     // ← 토큰에서 memberId 추출
             String imageUrl = s3Uploader.upload(multipartFile, "static");
