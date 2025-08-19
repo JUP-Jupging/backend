@@ -47,6 +47,7 @@ public class Plogging {
         this.distance = distance;
         this.startLat = startLat;
         this.startLng = startLng;
+        this.imageUrl = imageUrl;
     }
 
     // 참조
