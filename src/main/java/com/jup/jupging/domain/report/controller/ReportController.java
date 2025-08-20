@@ -95,10 +95,10 @@ public class ReportController {
     
     
     @PutMapping("/{reportId}")
-    public ResponseEntity<?> pick(@PathVariable("reportId") Long reportId) {
+    public ResponseEntity<Void> pick(@PathVariable("reportId") Long reportId) {
         return reportService.pickReport(reportId)
-                ? ResponseEntity.ok("picked")
-                : ResponseEntity.status(404).body("report not found");
+                ? ResponseEntity.ok().build()
+                : ResponseEntity.status(404).build();
     }
     
     @GetMapping("/trails/{trailId}")
